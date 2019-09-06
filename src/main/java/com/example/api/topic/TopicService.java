@@ -1,27 +1,35 @@
 package com.example.api.topic;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 @Service
 public class TopicService {
-  private List<Topic> topics = new ArrayList<>(Arrays.asList(
-    new Topic(1, "Spring", "Spring framework"),
-    new Topic(2, "Hibernate", "Hibernate Framework")
-  ));
+
+  @Autowired
+  private TopicRepository topicRepository;
 
   public List<Topic> getAllTopics() {
+    List<Topic> topics = new ArrayList<>();
+    topicRepository.findAll().forEach(topics::add);
     return topics;
   }
 
-  public Topic getTopic(String queryName) {
-    return topics.stream().filter(topic -> topic.getName().equals(queryName)).findFirst().get();
+  public Topic getTopic(String queryId) {
+    return topicRepository.findById(queryId).get();
   }
 
   public void addTopic(Topic topic) {
-    topics.add(topic);
+    topicRepository.save(topic);
+  }
+
+  public void updateTopic(Topic topic) {
+    topicRepository.save(topic);
+  }
+
+  public void deleteTopic(String queryId) {
+    topicRepository.deleteById(queryId);
   }
 }
